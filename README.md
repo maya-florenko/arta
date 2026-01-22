@@ -1,2 +1,5 @@
 # arta
-cute ^^ and helpful telegram bot named Arta!
+
+![arta](docs/assets/arta.jpg)
+
+## cute ^^ and helpful telegram bot named Arta!

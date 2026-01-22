@@ -1,0 +1,53 @@
+services:
+    qdrant:
+        image: qdrant/qdrant:gpu
+        restart: always
+        container_name: qdrant
+        ports:
+            - 6333:6333
+            - 6334:6334
+        expose:
+            - 6333
+            - 6334
+            - 6335
+        volumes:
+            - ./qdrant_data:/qdrant/storage
+    llama-server:
+        image: ghcr.io/ggml-org/llama.cpp:server-cuda
+        container_name: llama
+        ports:
+            - "8080:8080"
+        volumes:
+            - models:/models
+        environment:
+            - LLAMA_CACHE=/models
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
+        command: >
+            -hf unsloth/gpt-oss-20b-GGUF:Q4_K_M
+            --host 0.0.0.0
+            --port 8080
+            --n-gpu-layers 99
+            --threads 16
+            --threads-batch 8
+            --ctx-size 8192
+            --batch-size 4096
+            --ubatch-size 1024
+            --keep 512
+            --no-mmap
+            --mlock
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+volumes:
+    models:
+        driver: local

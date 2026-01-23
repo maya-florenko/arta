@@ -1,7 +1,22 @@
+name: arta
+
 services:
+    bot:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: mayusha256/arta:latest
+        container_name: bot
+        restart: unless-stopped
+        environment:
+            - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+        depends_on:
+            llama:
+                condition: service_healthy
+
     qdrant:
-        image: qdrant/qdrant:gpu
-        restart: always
+        image: qdrant/qdrant:v1.16-gpu-nvidia
+        restart: unless-stopped
         container_name: qdrant
         ports:
             - 6333:6333
@@ -11,8 +26,18 @@ services:
             - 6334
             - 6335
         volumes:
-            - ./qdrant_data:/qdrant/storage
-    llama-server:
+            - qdrant:/qdrant/storage
+        environment:
+            - QDRANT__GPU__INDEXING=1
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
+
+    llama:
         image: ghcr.io/ggml-org/llama.cpp:server-cuda
         container_name: llama
         ports:
@@ -41,6 +66,7 @@ services:
             --keep 512
             --no-mmap
             --mlock
+            --sleep-idle-seconds 120
         restart: unless-stopped
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -48,6 +74,9 @@ services:
             timeout: 10s
             retries: 3
             start_period: 40s
+
 volumes:
+    qdrant:
+        driver: local
     models:
         driver: local

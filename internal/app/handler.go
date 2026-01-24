@@ -8,13 +8,13 @@ import (
 	"github.com/mayusha256/arta/internal/ai"
 )
 
-func Handler(c context.Context, b *bot.Bot, u *models.Update) {
+func Handler(ctx context.Context, b *bot.Bot, u *models.Update) {
 	if u.Message == nil {
 		return
 	}
 
-	b.SendMessage(c, &bot.SendMessageParams{
+	b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: u.Message.Chat.ID,
-		Text:   ai.Init(c),
+		Text:   ai.Generate(ctx, u.Message.Text),
 	})
 }

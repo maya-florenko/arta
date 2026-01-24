@@ -2,21 +2,22 @@ package app
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/go-telegram/bot"
 )
 
-func Run(c context.Context) {
+func Init(ctx context.Context) error {
 	opts := []bot.Option{
 		bot.WithDefaultHandler(Handler),
 	}
 
 	b, err := bot.New(os.Getenv("TELEGRAM_TOKEN"), opts...)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	b.Start(c)
+	b.Start(ctx)
+
+	return nil
 }

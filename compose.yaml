@@ -10,9 +10,7 @@ services:
         restart: unless-stopped
         environment:
             - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-        depends_on:
-            llama:
-                condition: service_healthy
+            - OLLAMA_HOST=${OLLAMA_HOST}
 
     qdrant:
         image: qdrant/qdrant:v1.16-gpu-nvidia
@@ -37,15 +35,16 @@ services:
                           count: all
                           capabilities: [gpu]
 
-    llama:
-        image: ghcr.io/ggml-org/llama.cpp:server-cuda
-        container_name: llama
+    ollama:
+        image: ollama/ollama:0.14.3
+        container_name: ollama
         ports:
-            - "8080:8080"
+            - "11434:11434"
         volumes:
-            - models:/models
-        environment:
-            - LLAMA_CACHE=/models
+            - ollama:/root/.ollama
+        pull_policy: always
+        tty: true
+        restart: unless-stopped
         deploy:
             resources:
                 reservations:
@@ -53,30 +52,9 @@ services:
                         - driver: nvidia
                           count: all
                           capabilities: [gpu]
-        command: >
-            -hf unsloth/gpt-oss-20b-GGUF:Q4_K_M
-            --host 0.0.0.0
-            --port 8080
-            --n-gpu-layers 99
-            --threads 16
-            --threads-batch 8
-            --ctx-size 8192
-            --batch-size 4096
-            --ubatch-size 1024
-            --keep 512
-            --no-mmap
-            --mlock
-            --sleep-idle-seconds 120
-        restart: unless-stopped
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-            interval: 30s
-            timeout: 10s
-            retries: 3
-            start_period: 40s
 
 volumes:
     qdrant:
         driver: local
-    models:
+    ollama:
         driver: local

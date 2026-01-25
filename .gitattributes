@@ -1,2 +1,2 @@
-Dockerfile linguist-detectable=false
-Makefile linguist-detectable=false
+Dockerfile linguist-vendored
+Makefile linguist-vendored

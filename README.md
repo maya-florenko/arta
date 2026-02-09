@@ -1,5 +1,5 @@
 # arta
 
-![arta](docs/assets/arta.jpg)
+![arta](assets/arta.jpg)
 
 ## cute ^^ and helpful telegram bot named Arta!

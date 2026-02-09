@@ -8,7 +8,7 @@ RUN go mod download
 
 RUN CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o /app ./cmd/app/
 
-FROM gcr.io/distroless/static-debian12
+FROM gcr.io/distroless/static-debian13
 
 COPY --from=build /app /app
 

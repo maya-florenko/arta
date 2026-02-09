@@ -7,7 +7,6 @@ import (
 	"os/signal"
 
 	"github.com/joho/godotenv"
-	"github.com/mayusha256/arta/internal/ai"
 	"github.com/mayusha256/arta/internal/app"
 	"github.com/mayusha256/arta/internal/banner"
 )
@@ -17,10 +16,6 @@ func main() {
 	defer cancel()
 
 	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := ai.Init(); err != nil {
 		log.Fatal(err)
 	}
 

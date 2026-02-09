@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/mayusha256/arta/internal/ai"
 	"github.com/mayusha256/arta/internal/app"
 	"github.com/mayusha256/arta/internal/banner"
 )
@@ -14,10 +13,6 @@ import (
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
-
-	if err := ai.Init(); err != nil {
-		log.Fatal(err)
-	}
 
 	banner.Print()
 

@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/mayusha256/arta/internal/app"
-	"github.com/mayusha256/arta/internal/banner"
+	"github.com/maya-florenko/arta/internal/app"
+	"github.com/maya-florenko/arta/internal/banner"
 )
 
 func main() {

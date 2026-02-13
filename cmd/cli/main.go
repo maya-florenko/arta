@@ -7,8 +7,8 @@ import (
 	"os/signal"
 
 	"github.com/joho/godotenv"
-	"github.com/mayusha256/arta/internal/app"
-	"github.com/mayusha256/arta/internal/banner"
+	"github.com/maya-florenko/arta/internal/app"
+	"github.com/maya-florenko/arta/internal/banner"
 )
 
 func main() {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/joho/godotenv"
 	"github.com/maya-florenko/arta/internal/app"
 	"github.com/maya-florenko/arta/internal/banner"
 )
@@ -15,6 +16,8 @@ func main() {
 	defer cancel()
 
 	banner.Print()
+
+	_ = godotenv.Load()
 
 	if err := app.Init(ctx); err != nil {
 		log.Fatal(err)

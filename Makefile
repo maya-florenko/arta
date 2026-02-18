@@ -1,7 +1,7 @@
 default: run
 
 run:
-	go run cmd/cli/main.go
+	go run cmd/app/main.go
 
 up:
 	docker compose up -d --build

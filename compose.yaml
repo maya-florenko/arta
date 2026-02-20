@@ -1,12 +1,36 @@
 name: arta
 
 services:
-    bot:
+    app:
         build:
             context: .
             dockerfile: Dockerfile
         image: maya-florenko/arta
-        container_name: bot
+        container_name: app
         restart: unless-stopped
         environment:
             - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+            - OLLAMA_HOST=${OLLAMA_HOST}
+        depends_on:
+            - ollama
+        networks:
+            - arta-network
+
+    ollama:
+        image: ollama/ollama:0.16.2
+        container_name: ollama
+        ports:
+            - 11434:11434
+        volumes:
+            - ollama:/root/.ollama
+        restart: unless-stopped
+        networks:
+            - arta-network
+
+networks:
+    arta-network:
+        driver: bridge
+
+volumes:
+    ollama:
+        driver: local

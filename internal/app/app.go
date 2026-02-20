@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
+	"github.com/maya-florenko/arta/internal/ollama"
 )
 
 func Init(ctx context.Context) error {
@@ -28,8 +29,14 @@ func handler(ctx context.Context, b *bot.Bot, u *models.Update) {
 		return
 	}
 
-	b.SendMessage(ctx, &bot.SendMessageParams{
+	b.SendChatAction(ctx, &bot.SendChatActionParams{
 		ChatID: u.Message.Chat.ID,
-		Text:   "meow",
+		Action: models.ChatActionTyping,
+	})
+
+	b.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID:    u.Message.Chat.ID,
+		Text:      ollama.Generate(ctx, "user "+u.Message.From.FirstName+" is write you: "+u.Message.Text),
+		ParseMode: models.ParseModeHTML,
 	})
 }
